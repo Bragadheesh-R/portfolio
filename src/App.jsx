@@ -56,6 +56,20 @@ const skillGroups = [
   { label: "cloud & tools", items: ["AWS", "Git", "GitHub"] },
 ];
 
+const skillLinks={
+  Java: { icon: "java", url: "https://docs.oracle.com/en/java/" },
+JavaScript: { icon: "js", url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript" },
+"Spring Boot": { icon: "spring", url: "https://spring.io/projects/spring-boot" },
+React: { icon: "react", url: "https://react.dev" },
+HTML: { icon: "html", url: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
+CSS: { icon: "css", url: "https://developer.mozilla.org/en-US/docs/Web/CSS" },
+MySQL: { icon: "mysql", url: "https://dev.mysql.com/doc/" },
+MongoDB: { icon: "mongodb", url: "https://www.mongodb.com/docs/" },
+AWS: { icon: "aws", url: "https://docs.aws.amazon.com/" },
+Git: { icon: "git", url: "https://git-scm.com/doc" },
+GitHub: { icon: "github", url: "https://docs.github.com/" },
+};
+
 const projects = [
   {
     id: "01",
@@ -183,8 +197,7 @@ export default function Portfolio() {
           <div>{"}"}</div>
         </div>
 
-        <div className="flex gap-4 mt-8">
-          
+        <div className="mt-8">
           <a
             href="mailto:bragadheeshr@gmail.com"
             className="flex items-center gap-2 px-4 py-2 rounded-md font-mono text-sm"
@@ -209,6 +222,9 @@ export default function Portfolio() {
           >
             <Link2 size={14} /> github
           </a>
+          <img src="https://skillicons.dev/icons?i=java,spring,react,html,css,js,mysql,mongodb,aws,git,github&theme=dark"
+          alt="Tech Stack icons"
+          className="max-w-full"></img>
         </div>
       </header>
 
@@ -236,19 +252,33 @@ export default function Portfolio() {
                 {g.label}
               </div>
               <div className="flex flex-wrap gap-2">
-                {g.items.map((s) => (
-                  <span
+                {g.items.map((s) => {
+                  const link = skillLinks[s];
+                  if (link) {
+                    return (
+                    <a
                     key={s}
-                    className="px-2.5 py-1 rounded text-sm border"
-                    style={{ borderColor: colors.panelBorder, backgroundColor: colors.panel }}
-                  >
+                    href={link.url}target="_blank"rel="noreferrer"className="flex items-center gap-1.5 px-2.5 py-1 rounded text-sm border hover:opacity-80 transition"
+                    style={{ borderColor: colors.panelBorder, backgroundColor: colors.panel }}>
+                    
+                      <img src={`https://skillicons.dev/icons?i=${link.icon}&theme=dark`}alt={s} className="w-4 h-4"/>
+                      {s}
+                      </a>
+                    );
+                  }
+                  return (
+                  <span
+                  key={s}
+                  className="px-2.5 py-1 rounded text-sm border"
+                  style={{ borderColor: colors.panelBorder, backgroundColor: colors.panel }}>
                     {s}
-                  </span>
-                ))}
+                    </span>
+                    );
+                    })}
+                </div>
+                </div>
+              ))}
               </div>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* Projects */}

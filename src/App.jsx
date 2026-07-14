@@ -1,3 +1,6 @@
+import SaturnBackground from "./components/SatBackground";
+import "./styles/glass.css";
+import {motion} from "framer-motion";
 import React, { useState } from "react";
 import {
   Link2,
@@ -9,7 +12,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const colors = {
+const darkColors = {
   bg: "#05060F",
   panel: "#0D1024",
   panelBorder: "#22264A",
@@ -18,6 +21,17 @@ const colors = {
   accent: "#8B7BFF",
   green: "#4ADE80",
   blue: "#FFB84D",
+};
+
+const lightColors = {
+  bg: "#F7F7FC",
+  panel: "#FFFFFF",
+  panelBorder: "#E1E1F0",
+  text: "#1A1A2E",
+  muted: "#6B6B8A",
+  accent: "#6D4FFF",
+  green: "#16A34A",
+  blue: "#D97706",
 };
 
 const StarField = () => (
@@ -108,29 +122,47 @@ const blogPosts = [
   },
 ];
 
-function SectionLabel({ id, children }) {
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+};
+
+function AnimatedSection({ children, ...props }) {
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      variants={fadeInUp}
+      {...props}
+    >
+      {children}
+    </motion.section>
+  );
+}
+
+function SectionLabel({ id, colors, children }) {
   return (
     <div className="flex items-center gap-2 mb-6">
       <Orbit size={14} style={{ color: colors.accent }} />
-      <span
-        className="font-mono text-xs tracking-widest uppercase"
-        style={{ color: colors.accent }}
-      >
+      <span className="font-mono text-xs tracking-widest uppercase" style={{ color: colors.accent }}>
         GET {id}
       </span>
       <div className="h-px flex-1" style={{ backgroundColor: colors.panelBorder }} />
     </div>
   );
 }
-
 export default function Portfolio() {
   const [hovered, setHovered] = useState(null);
+  const [theme, setTheme] = useState("dark");
+  const colors = theme === "dark" ? darkColors : lightColors;
 
   return (
     <div
       className="min-h-screen w-full font-sans"
-      style={{ backgroundColor: colors.bg, color: colors.text }}
-    >
+      style={{ backgroundColor: colors.bg, color: colors.text }}>
+      <SaturnBackground/>
       {/* Nav */}
       <nav
         className="sticky top-0 z-10 border-b backdrop-blur"
@@ -154,6 +186,12 @@ export default function Portfolio() {
               </a>
             ))}
           </div>
+          <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="px-3 py-1 rounded-md border font-mono text-xs"
+          style={{ borderColor: colors.panelBorder, color: colors.text }}>
+            {theme === "dark" ? "☀ light" : "🌙 dark"}
+          </button>
         </div>
       </nav>
 
@@ -174,8 +212,7 @@ export default function Portfolio() {
 
         {/* signature element: profile.json */}
         <div
-          className="relative rounded-lg border p-5 font-mono text-sm leading-relaxed overflow-x-auto"
-          style={{ backgroundColor: colors.panel, borderColor: colors.panelBorder }}
+          className="relative rounded-lg glass-panel border p-5 font-mono text-sm leading-relaxed overflow-x-auto"
         >
           <div style={{ color: colors.muted }}>// profile.json</div>
           <div>{"{"}</div>
@@ -197,7 +234,7 @@ export default function Portfolio() {
           <div>{"}"}</div>
         </div>
 
-        <div className="mt-8">
+        <div className="flex flex-wrap mt-8">
           <a
             href="mailto:bragadheeshr@gmail.com"
             className="flex items-center gap-2 px-4 py-2 rounded-md font-mono text-sm"
@@ -222,15 +259,12 @@ export default function Portfolio() {
           >
             <Link2 size={14} /> github
           </a>
-          <img src="https://skillicons.dev/icons?i=java,spring,react,html,css,js,mysql,mongodb,aws,git,github&theme=dark"
-          alt="Tech Stack icons"
-          className="max-w-full"></img>
         </div>
       </header>
 
       {/* About */}
-      <section id="about" className="max-w-4xl mx-auto px-6 py-14">
-        <SectionLabel id="/about">About</SectionLabel>
+      <AnimatedSection id="about" className="max-w-4xl mx-auto px-6 py-14">
+        <SectionLabel id="/about"colors={colors}>About</SectionLabel>
         <p className="text-base leading-relaxed" style={{ color: colors.text }}>
           I'm a Computer Science graduate (2025) focused on backend development
           with Java and Spring Boot, and comfortable working across the stack
@@ -240,11 +274,11 @@ export default function Portfolio() {
           not guessing. Currently deepening my backend fundamentals while
           staying open to full-stack roles.
         </p>
-      </section>
+      </AnimatedSection>
 
       {/* Skills */}
-      <section id="skills" className="max-w-4xl mx-auto px-6 py-14">
-        <SectionLabel id="/skills">Skills</SectionLabel>
+      <AnimatedSection id="skills" className="max-w-4xl mx-auto px-6 py-14">
+        <SectionLabel id="/skills" colors={colors}>Skills</SectionLabel>
         <div className="grid sm:grid-cols-2 gap-6">
           {skillGroups.map((g) => (
             <div key={g.label}>
@@ -279,17 +313,16 @@ export default function Portfolio() {
                 </div>
               ))}
               </div>
-      </section>
+      </AnimatedSection>
 
       {/* Projects */}
-      <section id="projects" className="max-w-4xl mx-auto px-6 py-14">
-        <SectionLabel id="/projects">Projects</SectionLabel>
+      <AnimatedSection id="projects" className="max-w-4xl mx-auto px-6 py-14">
+        <SectionLabel id="/projects" colors={colors}>Projects</SectionLabel>
         <div className="space-y-4">
           {projects.map((p) => (
             <div
               key={p.id}
-              className="rounded-lg border p-5"
-              style={{ borderColor: colors.panelBorder, backgroundColor: colors.panel }}
+              className="rounded-lg glass-panel p-5"
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-3">
@@ -322,14 +355,13 @@ export default function Portfolio() {
             </div>
           ))}
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Experience */}
-      <section id="experience" className="max-w-4xl mx-auto px-6 py-14">
-        <SectionLabel id="/experience">Experience</SectionLabel>
+      <AnimatedSection id="experience" className="max-w-4xl mx-auto px-6 py-14">
+        <SectionLabel id="/experience" colors={colors}>Experience</SectionLabel>
         <div
-          className="rounded-lg border p-5 relative pl-6"
-          style={{ borderColor: colors.panelBorder, backgroundColor: colors.panel }}
+          className="rounded-lg glass-panel p-5 relative pl-6"
         >
           <div
             className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg"
@@ -351,18 +383,17 @@ export default function Portfolio() {
             CSS, and JavaScript.
           </p>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Blog */}
-      <section id="blog" className="max-w-4xl mx-auto px-6 py-14">
-        <SectionLabel id="/blog">Blog</SectionLabel>
+      <AnimatedSection id="blog" className="max-w-4xl mx-auto px-6 py-14">
+        <SectionLabel id="/blog" colors={colors}>Blog</SectionLabel>
         <div className="space-y-3">
           {blogPosts.map((post) => (
             <a
               key={post.title}
               href="https://github.com/Bragadheesh-R"
-              className="block rounded-lg border p-5 group"
-              style={{ borderColor: colors.panelBorder, backgroundColor: colors.panel }}
+              className="block rounded-lg glass-panel p-5 group"
             >
               <div className="flex items-center justify-between mb-1">
                 <span className="font-mono text-xs" style={{ color: colors.muted }}>
@@ -380,14 +411,13 @@ export default function Portfolio() {
         <p className="text-xs mt-4 font-mono" style={{ color: colors.muted }}>
           // placeholder posts — replace with real write-ups once published
         </p>
-      </section>
+      </AnimatedSection>
 
       {/* Contact */}
-      <section id="contact" className="max-w-4xl mx-auto px-6 py-14">
-        <SectionLabel id="/contact">Contact</SectionLabel>
+      <AnimatedSection id="contact" className="max-w-4xl mx-auto px-6 py-14">
+        <SectionLabel id="/contact" colors={colors}>Contact</SectionLabel>
         <div
-          className="rounded-lg border p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-          style={{ borderColor: colors.panelBorder, backgroundColor: colors.panel }}
+          className="rounded-lg glass-panel p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
         >
           <div>
             <p className="mb-1">Open to Software Engineer roles — backend-focused, full-stack ready.</p>
@@ -403,7 +433,7 @@ export default function Portfolio() {
             <Mail size={14} /> bragadheeshr@gmail.com <ExternalLink size={12} />
           </a>
         </div>
-      </section>
+      </AnimatedSection>
 
       <footer className="max-w-4xl mx-auto px-6 py-10 text-center font-mono text-xs" style={{ color: colors.muted }}>
         built with React · deployed on GitHub Pages
